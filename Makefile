@@ -3,12 +3,13 @@ HEADERS=$(wildcard *.h)
 OBJECTS=$(patsubst %.c, %.o, $(SOURCES))
 LIBS=tool.so runtime.so
 TARGET=mytest
-CC=gcc
+CC?=gcc
 # Flags for linking on OSX
 SOFLAGS=-shared -undefined dynamic_lookup
 # Flags for linking on POWER9 with GCC
-SOFLAGS=-shared
-CFLAGS=-O3
+SOFLAGS=-shared -fPIC
+CFLAGS=-O3 -fPIC
+LDFLAGS=-Wl,--rpath,$(PWD)
 
 .SECONDARY: $(OBJS)
 .PHONY: all
@@ -22,7 +23,7 @@ all: $(TARGET)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(TARGET): main.o $(LIBS)
-	$(CC) $(CFLAGS) -o $@ $^ -lm
+	$(CC) $(CFLAGS) -o $@ $^ -lm $(LDFLAGS)
 
 clean:
 	rm -f $(OBJECTS) $(LIBS) $(TARGET)
