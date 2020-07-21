@@ -1,9 +1,10 @@
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "foo.h"
 
-#define ITERATIONS 100000000
+#define ITERATIONS 20000000
 #define BILLION    1000000000
 #define SAMPLES 20
 #define DSAMPLES (double)(SAMPLES)
@@ -51,6 +52,14 @@ int main (int argc, char * argv[]) {
     double total_pretty = 0;
     double sumsqr_ugly = 0;
     double sumsqr_pretty = 0;
+    double total_ugly_p = 0;
+    double total_pretty_p = 0;
+    double sumsqr_ugly_p = 0;
+    double sumsqr_pretty_p = 0;
+    int enable=1;
+    if (argc>1)
+        enable=atoi(argv[1]);
+    init_runtime(enable);
     for (outer = 0 ; outer < SAMPLES ; outer++) {
         printf("ugly: "); fflush(stdout);
         clock_gettime(CLOCK_MONOTONIC, &start);
@@ -73,6 +82,29 @@ int main (int argc, char * argv[]) {
         printf("%f seconds\n", elapsed);
         total_pretty = total_pretty + elapsed;
         sumsqr_pretty = sumsqr_pretty + (elapsed*elapsed);
+
+        printf("ugly_p: "); fflush(stdout);
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        for (i = 0 ; i < ITERATIONS ; i++) {
+            call_ugly_fast_by_pointer();
+        }
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed = compute_elapsed(&start, &end);
+        printf("  %f seconds\n", elapsed);
+        total_ugly_p = total_ugly_p + elapsed;
+        sumsqr_ugly_p = sumsqr_ugly_p + (elapsed*elapsed);
+
+        printf("pretty_p: "); fflush(stdout);
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        for (i = 0 ; i < ITERATIONS ; i++) {
+            call_pretty_slow_by_pointer();
+        }
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        elapsed = compute_elapsed(&start, &end);
+        printf("%f seconds\n", elapsed);
+        total_pretty_p = total_pretty_p + elapsed;
+        sumsqr_pretty_p = sumsqr_pretty_p + (elapsed*elapsed);
     }
     report("Ugly  ", total_ugly, sumsqr_ugly, "Pretty", total_pretty, sumsqr_pretty);
+    report("Ugly_p", total_ugly_p, sumsqr_ugly_p, "Pretty", total_pretty_p, sumsqr_pretty_p);
 }

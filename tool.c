@@ -21,3 +21,8 @@ char* k) {
 void pretty_slow(foo_t *f) {
     return;
 }
+
+void init_tool(ugly_fast_t* ugly_fast_p, pretty_slow_t* pretty_slow_p) {
+    *ugly_fast_p = ugly_fast;
+    *pretty_slow_p = pretty_slow;
+}
