@@ -1,6 +1,7 @@
 
 #include "foo.h"
 
+/* implement the ugly callback */
 void ugly_fast(
 int a,
 char b,
@@ -16,6 +17,7 @@ char* k) {
     return;
 }
 
+/* implement the pretty callback */
 void pretty_slow(foo_t *f) {
     return;
 }

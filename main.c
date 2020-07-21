@@ -6,6 +6,7 @@
 #define ITERATIONS 100000000
 #define BILLION    1000000000
 #define SAMPLES 20
+#define DSAMPLES (double)(SAMPLES)
 #define GHZ 4.0
 
 double compute_elapsed(struct timespec *start, struct timespec *end) {
@@ -16,19 +17,28 @@ double compute_elapsed(struct timespec *start, struct timespec *end) {
 
 void report(const char * label1, double total1, double sumsquare1,
               const char * label2, double total2, double sumsquare2) {
-    double mean1 = total1 / (double)(SAMPLES);
-    double stddev1 = (sumsquare1 / SAMPLES) - (mean1 * mean1);
-    printf("\n%s: %f +/- %f\n", label1, mean1, stddev1);
-    double mean2 = total2 / (double)(SAMPLES);
-    double stddev2 = (sumsquare2 / SAMPLES) - (mean2 * mean2);
-    printf("%s: %f +/- %f\n", label2, mean2, stddev2);
-    double diff = mean2 - mean1;
-    double error = sqrt((stddev1 * stddev1) + (stddev2 * stddev2));
-    printf("Diff  : %f +/- %f\n", diff, error);
+    // compute the mean
+    double mean1 = total1 / DSAMPLES;
+    // compute the standard deviation from sum of squares
+    double stddev1 = (sumsquare1 / DSAMPLES) - (mean1 * mean1);
+    printf("\n%s: %f +/- %1.9f\n", label1, mean1, stddev1);
+    // compute the mean
+    double mean2 = total2 / DSAMPLES;
+    // compute the standard deviation from sum of squares
+    double stddev2 = (sumsquare2 / DSAMPLES) - (mean2 * mean2);
+    printf("%s: %f +/- %1.9f\n", label2, mean2, stddev2);
+    // take the difference in means
+    double diff = fabs(mean2 - mean1);
+    // take the difference in standard deviations, known counts
+    double error = sqrt(((stddev1 * stddev1)/DSAMPLES) +
+                        ((stddev2 * stddev2)/DSAMPLES));
+    printf("Diff  : %f +/- %1.9f\n", diff, error);
+    // convert to nanoseconds per call
     double cost = (diff / (double)(ITERATIONS)) * (double)(BILLION);
     double error_cost = (error / (double)(ITERATIONS)) * (double)(BILLION);
-    printf("Cost  : %f +/- %f ns per call\n", cost, error_cost);
-    printf("Cost  : %f +/- %f cycles per call on %f GHz CPU\n", cost * GHZ, error_cost * GHZ, GHZ);
+    printf("Cost  : %f +/- %1.9f ns per call\n", cost, error_cost);
+    // convert to cycles per call, based on GHZ of CPU
+    printf("Cost  : %f +/- %1.9f cycles per call on %f GHz CPU\n", cost * GHZ, error_cost * GHZ, GHZ);
 }
 
 int main (int argc, char * argv[]) {

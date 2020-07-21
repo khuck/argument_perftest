@@ -12,10 +12,12 @@ static void* i = (void*)0x3;
 static void* j = (void*)0x4;
 static char* k = "A string";
 
+/* implement the ugly call */
 void call_ugly_fast(void) {
     ugly_fast(a, b, c, d, e, f, g, h, i, j, k);
 }
 
+/* implement the pretty call, populating a structure */
 void call_pretty_slow(void) {
     foo_t foo_struct;
     foo_struct.a = a;
