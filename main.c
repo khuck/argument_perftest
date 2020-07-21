@@ -6,7 +6,7 @@
 #define ITERATIONS 100000000
 #define BILLION    1000000000
 #define SAMPLES 20
-#define GHZ 1.2
+#define GHZ 4.0
 
 double compute_elapsed(struct timespec *start, struct timespec *end) {
     double startd = (double)(start->tv_sec) + ((double)(start->tv_nsec) / BILLION);
