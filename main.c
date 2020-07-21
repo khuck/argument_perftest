@@ -1,9 +1,10 @@
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "foo.h"
 
-#define ITERATIONS 100000000
+#define ITERATIONS 20000000
 #define BILLION    1000000000
 #define SAMPLES 20
 #define DSAMPLES (double)(SAMPLES)
@@ -55,7 +56,10 @@ int main (int argc, char * argv[]) {
     double total_pretty_p = 0;
     double sumsqr_ugly_p = 0;
     double sumsqr_pretty_p = 0;
-    init_runtime();
+    int enable=1;
+    if (argc>1)
+        enable=atoi(argv[1]);
+    init_runtime(enable);
     for (outer = 0 ; outer < SAMPLES ; outer++) {
         printf("ugly: "); fflush(stdout);
         clock_gettime(CLOCK_MONOTONIC, &start);

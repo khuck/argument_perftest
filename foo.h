@@ -60,4 +60,4 @@ void call_pretty_slow(void);
 void call_ugly_fast_by_pointer(void);
 void call_pretty_slow_by_pointer(void);
 
-void init_runtime();
+void init_runtime(int);

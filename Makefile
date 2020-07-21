@@ -4,11 +4,14 @@ OBJECTS=$(patsubst %.c, %.o, $(SOURCES))
 LIBS=tool.so runtime.so
 TARGET=mytest
 CC?=gcc
+
+USETOOL=-DUSE_TOOL
+#USETOOL=
 # Flags for linking on OSX
 SOFLAGS=-shared -undefined dynamic_lookup
 # Flags for linking on POWER9 with GCC
 SOFLAGS=-shared -fPIC
-CFLAGS=-O3 -fPIC
+CFLAGS=-O3 -fPIC $(USETOOL)
 LDFLAGS=-Wl,--rpath,$(PWD)
 
 .SECONDARY: $(OBJS)
