@@ -28,7 +28,7 @@ void report(const char * label1, double total1, double sumsquare1,
     double cost = (diff / (double)(ITERATIONS)) * (double)(BILLION);
     double error_cost = (error / (double)(ITERATIONS)) * (double)(BILLION);
     printf("Cost  : %f +/- %f ns per call\n", cost, error_cost);
-    printf("Cost  : %f +/- %f cycles per call\n", cost * GHZ, error_cost * GHZ);
+    printf("Cost  : %f +/- %f cycles per call on %f GHz CPU\n", cost * GHZ, error_cost * GHZ, GHZ);
 }
 
 int main (int argc, char * argv[]) {
